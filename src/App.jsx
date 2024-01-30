@@ -1,7 +1,7 @@
-import FeedbackForm2 from "./memory-storage/FeedbackForm2";
+import TrafficLight from "./state-as-snapshot/TrafficLight";
 
 export default function App() {
   return (
-    <FeedbackForm2 />
-  )
+      <TrafficLight />
+    )
 }
