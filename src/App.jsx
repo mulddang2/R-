@@ -1,7 +1,5 @@
-import TrafficLight from "./state-as-snapshot/TrafficLight";
+import RequestTracker from './state-as-snapshot/RequestTracker';
 
 export default function App() {
-  return (
-      <TrafficLight />
-    )
+  return <RequestTracker />;
 }
