@@ -21,6 +21,20 @@ const initialProducts = [
 export default function ShoppingCart() {
   const [products, setProducts] = useState(initialProducts);
 
+  function handleDecreaseClick(productId) {
+    // 1. map을 사용하여 새 배열을 만든다
+    let nextProducts = products.map((product) => {
+      if (product.id === productId) {
+        return { ...product, count: product.count - 1 };
+      } else {
+        return product;
+      }
+    });
+
+    // 2. filter로 count가 0 인 것들을 제거한다
+    nextProducts = nextProducts.filter((p) => p.count > 0);
+    setProducts(nextProducts);
+  }
   function handleIncreaseClick(productId) {
     setProducts(
       products.map((product) => {
@@ -47,6 +61,13 @@ export default function ShoppingCart() {
             }}
           >
             +
+          </button>
+          <button
+            onClick={() => {
+              handleDecreaseClick(product.id);
+            }}
+          >
+            -
           </button>
         </li>
       ))}
