@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
+
 import { useState } from 'react';
 
 export default function Box({ children, color, position, onMove }) {
-  const [lastCoordinates, setLastCoordinates] = useState(null);
+  const [lastCoordinates, updateLastCoordinates] = useState(null);
 
   function handlePointerDown(e) {
     e.target.setPointerCapture(e.pointerId);
-    setLastCoordinates({
+    updateLastCoordinates({
       x: e.clientX,
       y: e.clientY,
     });
@@ -14,7 +15,7 @@ export default function Box({ children, color, position, onMove }) {
 
   function handlePointerMove(e) {
     if (lastCoordinates) {
-      setLastCoordinates({
+      updateLastCoordinates({
         x: e.clientX,
         y: e.clientY,
       });
@@ -26,7 +27,7 @@ export default function Box({ children, color, position, onMove }) {
 
   // eslint-disable-next-line no-unused-vars
   function handlePointerUp(e) {
-    setLastCoordinates(null);
+    updateLastCoordinates(null);
   }
 
   return (
