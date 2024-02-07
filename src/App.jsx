@@ -1,9 +1,9 @@
-import Canvas from "./updating-objects/Canvas";
+import ShoppingCart from "./updating-arrays/ShoppingCart";
 
 export default function App() {
   return (
     <>
-      <Canvas />
+      <ShoppingCart />
     </>
   );
 }
