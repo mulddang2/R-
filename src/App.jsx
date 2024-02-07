@@ -1,10 +1,9 @@
-import Scoreboard from "./updating-objects/Scoreboard";
+import Canvas from "./updating-objects/Canvas";
 
 export default function App() {
   return (
     <>
-      <Scoreboard />
+      <Canvas />
     </>
   );
 }
-
