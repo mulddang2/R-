@@ -1,48 +1,31 @@
-import AddTodo from './updating-arrays/AddTodo.jsx';
-import TaskList from './updating-arrays/TaskList.jsx';
-import { useImmer } from 'use-immer';
+import { useState } from 'react';
+// 사진을 클릭하면 바깥에 있는 <div>의 background--active CSS class를 제거하고 <img>에 picture--active class를 추가합니다. 그리고 배경을 다시 클릭하면 원래 CSS class로 돌아와야 합니다.
 
-let nextId = 3;
-const initialTodos = [
-  { id: 0, title: 'Buy milk', done: true },
-  { id: 1, title: 'Eat tacos', done: false },
-  { id: 2, title: 'Brew tea', done: false },
-];
+// 화면상으로는 사진을 클릭하면 보라색 배경은 제거되고 사진의 테두리는 강조 표시됩니다. 사진 외부를 클릭하면 배경이 강조 표시되고 사진의 테두리 강조 표시는 제거됩니다.
 
-export default function TaskApp() {
-  const [todos, updateTodos] = useImmer(initialTodos);
+export default function Picture() {
+  const [isActive, setIsActive] = useState(false);
 
-  function handleAddTodo(title) {
-    updateTodos((draft) => {
-      draft.push({ id: nextId++, title: title, done: false });
-    });
-  }
+  let backgroundClassName = 'background';
+  let pictureClassName = 'picture';
 
-  function handleChangeTodo(nextTodo) {
-    updateTodos((draft) => {
-      const todo = draft.find((t) => t.id === nextTodo.id);
-      todo.title = nextTodo.title;
-      todo.done = nextTodo.done;
-    });
-  }
-
-  function handleDeleteTodo(todoId) {
-    updateTodos((draft) => {
-      const index = draft.findIndex((t) => {
-        t.id === todoId;
-      });
-      draft.splice(index, 1);
-    });
+  if (isActive) {
+    pictureClassName += ' picture--active';
+  } else {
+    backgroundClassName += ' background--active';
   }
 
   return (
-    <>
-      <AddTodo onAddTodo={handleAddTodo} />
-      <TaskList
-        todos={todos}
-        onChangeTodo={handleChangeTodo}
-        onDeleteTodo={handleDeleteTodo}
+    <div className={backgroundClassName} onClick={() => setIsActive(false)}>
+      <img
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsActive(true);
+        }}
+        className={pictureClassName}
+        alt='Rainbow houses in Kampung Pelangi, Indonesia'
+        src='https://i.imgur.com/5qwVYb1.jpeg'
       />
-    </>
+    </div>
   );
 }
