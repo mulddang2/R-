@@ -1,49 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Clock from './choosing-the-state-structure/Clock';
 
-export default function EditProfile() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
+function useTime() {
+  const [time, setTime] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
 
+export default function App() {
+  const time = useTime();
+  const [color, setColor] = useState('lightcoral');
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        setIsEditing(!isEditing);
-      }}
-    >
-      <label>
-        First name:{' '}
-        {isEditing ? (
-          <input
-            value={firstName}
-            onChange={(e) => {
-              setFirstName(e.target.value);
-            }}
-          />
-        ) : (
-          <b>{firstName}</b>
-        )}
-      </label>
-      <label>
-        Last name:{' '}
-        {isEditing ? (
-          <input
-            value={lastName}
-            onChange={(e) => {
-              setLastName(e.target.value);
-            }}
-          />
-        ) : (
-          <b>{lastName}</b>
-        )}
-      </label>
-      <button type='submit'>{isEditing ? 'Save' : 'Edit'} Profile</button>
+    <div>
       <p>
-        <i>
-          Hello, {firstName} {lastName}!
-        </i>
+        Pick a color:{' '}
+        <select value={color} onChange={(e) => setColor(e.target.value)}>
+          <option value='lightcoral'>lightcoral</option>
+          <option value='midnightblue'>midnightblue</option>
+          <option value='rebeccapurple'>rebeccapurple</option>
+        </select>
       </p>
-    </form>
+      <Clock color={color} time={time.toLocaleTimeString()} />
+    </div>
   );
 }
