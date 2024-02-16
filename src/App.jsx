@@ -1,63 +1,47 @@
 import { useState } from 'react';
-import AddItem from './choosing-the-state-structure/AddItem';
-import PackingList from './choosing-the-state-structure/PackingList';
+import { initialLetters } from './choosing-the-state-structure/data';
+import Letter from './choosing-the-state-structure/Letter';
 
-let nextId = 3;
-const initialItems = [
-  { id: 0, title: 'Warm socks', packed: true },
-  { id: 1, title: 'Travel journal', packed: false },
-  { id: 2, title: 'Watercolors', packed: false },
-];
+export default function MailClient() {
+  const [letters, setLetters] = useState(initialLetters);
+  // NOTE: 하이라이트 된 문자 highlightedLetter의 상태를 보관하면, letters와 데이터가 중복되기 때문,,,,, 버튼 클릭 한 후, letters 배열이 업데이트 될 때, highlightedLetter와 다른 새 문자 객체가 생성되기 때문에 ----> 하이라이터가 순간 사라지는 버그가 발생한다.
+  // const [highlightedLetter, setHighlightedLetter] = useState(null);
 
-export default function TravelPlan() {
-  const [items, setItems] = useState(initialItems);
-  // NOTE: packed, total은 아래와 같이 만들어서 쓸 수 있기 때문에, 상태로 저장할 필요가 없다.
+  const [highlightedId, setHighlightedId] = useState(null);
 
-  const packed = items.filter((item) => item.packed).length;
-  const total = items.length;
-
-  function handleAddItem(title) {
-    setItems([
-      ...items,
-      {
-        id: nextId++,
-        title: title,
-        packed: false,
-      },
-    ]);
+  function handleHover(letterId) {
+    setHighlightedId(letterId);
   }
 
-  // NOTE: 체크 상태를 업데이트 하기위해서 필요함
-  function handleChangeItem(nextItem) {
-    setItems(
-      items.map((item) => {
-        if (item.id === nextItem.id) {
-          console.log('nextItem:' + nextItem);
-          return nextItem;
+  function handleStar(starredId) {
+    setLetters(
+      letters.map((letter) => {
+        if (letter.id === starredId) {
+          return {
+            ...letter,
+            isStarred: !letter.isStarred,
+          };
         } else {
-          console.log('item:' + item);
-          return item;
+          return letter;
         }
       })
     );
   }
 
-  function handleDeleteItem(itemId) {
-    setItems(items.filter((item) => item.id !== itemId));
-  }
-
   return (
     <>
-      <AddItem onAddItem={handleAddItem} />
-      <PackingList
-        items={items}
-        onChangeItem={handleChangeItem}
-        onDeleteItem={handleDeleteItem}
-      />
-      <hr />
-      <b>
-        {packed} out of {total} packed!
-      </b>
+      <h2>Inbox</h2>
+      <ul>
+        {letters.map((letter) => (
+          <Letter
+            key={letter.id}
+            letter={letter}
+            isHighlighted={letter.id === highlightedId}
+            onHover={handleHover}
+            onToggleStar={handleStar}
+          />
+        ))}
+      </ul>
     </>
   );
 }
