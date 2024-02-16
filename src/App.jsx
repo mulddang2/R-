@@ -1,31 +1,21 @@
 import { useState } from 'react';
-import { initialLetters } from './choosing-the-state-structure/data';
+import { letters } from './choosing-the-state-structure/data';
 import Letter from './choosing-the-state-structure/Letter';
-
+// NOTE: 배열의 단점으로 includes 사용 시, selectedIds.includes(letter.id)를 호출해서 선택여부확인을 한다는 것이다. 그래서 State에 Set을 보관하고, Set 활용해서 has 메서드 쓰면 좀더 빠르다
 export default function MailClient() {
-  const [letters, setLetters] = useState(initialLetters);
-  // NOTE: 하이라이트 된 문자 highlightedLetter의 상태를 보관하면, letters와 데이터가 중복되기 때문,,,,, 버튼 클릭 한 후, letters 배열이 업데이트 될 때, highlightedLetter와 다른 새 문자 객체가 생성되기 때문에 ----> 하이라이터가 순간 사라지는 버그가 발생한다.
-  // const [highlightedLetter, setHighlightedLetter] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
 
-  const [highlightedId, setHighlightedId] = useState(null);
+  // TODO: allow multiple selection
+  const selectedCount = selectedIds.length;
 
-  function handleHover(letterId) {
-    setHighlightedId(letterId);
-  }
+  function handleToggle(toggledId) {
+    // TODO: allow multiple selection
 
-  function handleStar(starredId) {
-    setLetters(
-      letters.map((letter) => {
-        if (letter.id === starredId) {
-          return {
-            ...letter,
-            isStarred: !letter.isStarred,
-          };
-        } else {
-          return letter;
-        }
-      })
-    );
+    if (selectedIds.includes(toggledId)) {
+      setSelectedIds(selectedIds.filter((id) => id !== toggledId));
+    } else {
+      setSelectedIds([...selectedIds, toggledId]);
+    }
   }
 
   return (
@@ -36,11 +26,17 @@ export default function MailClient() {
           <Letter
             key={letter.id}
             letter={letter}
-            isHighlighted={letter.id === highlightedId}
-            onHover={handleHover}
-            onToggleStar={handleStar}
+            isSelected={
+              // TODO: allow multiple selection
+              selectedIds.includes(letter.id)
+            }
+            onToggle={handleToggle}
           />
         ))}
+        <hr />
+        <p>
+          <b>You selected {selectedCount} letters</b>
+        </p>
       </ul>
     </>
   );
