@@ -1,25 +1,40 @@
 /* eslint-disable react/prop-types */
-// NOTE: 챌린지 1 of 2: 동기화된 입력 
 import { useState } from 'react';
+import { filterItems, foods } from './sharing-state-between-components/data';
 
-export default function SyncedInputs() {
-  const [text, setText] = useState('');
+export default function FilterableList() {
+  const [query, setQuery] = useState('');
+  const result = filterItems(foods, query);
 
   function handleChange(e) {
-    setText(e.target.value);
+    setQuery(e.target.value);
   }
   return (
     <>
-      <Input label='First input' value={text} onChange={handleChange} />
-      <Input label='Second input' value={text} onChange={handleChange} />
+      <SearchBar query={query} onChange={handleChange} />
+      <hr />
+      <List items={result} />
     </>
   );
 }
 
-function Input({ label, value, onChange }) {
+function SearchBar({ query, onChange }) {
   return (
     <label>
-      {label} <input value={value} onChange={onChange} />
+      Search: <input value={query} onChange={onChange} />
     </label>
+  );
+}
+
+function List({ items }) {
+  return (
+    <table>
+      {items.map((food) => (
+        <tr key={food.id}>
+          <td>{food.name}</td>
+          <td>{food.description}</td>
+        </tr>
+      ))}
+    </table>
   );
 }
